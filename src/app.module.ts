@@ -1,11 +1,15 @@
+// app.module.ts
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule } from '@nestjs/config';
+import { dataSourceOptions } from './typeorm.config'; // Importe a configuração
 import { PessoaModule } from './pessoa/pessoa.module';
 
 @Module({
-  imports: [PessoaModule],
-  providers: [AppService],
-  controllers: [AppController],
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
+    TypeOrmModule.forRoot(dataSourceOptions), // Use a configuração importada
+    // ...seus outros módulos
+  PessoaModule],
 })
 export class AppModule {}

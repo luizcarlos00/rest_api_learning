@@ -1,13 +1,14 @@
-import { IsInt, IsNotEmpty, IsPositive, IsString, Max, MAX, Min } from 'class-validator';
+import { IsInt, IsNotEmpty, IsPositive, IsString, Max, Min } from 'class-validator';
 
 export class CreatePessoaDto {
 	@IsString()
 	@IsNotEmpty()
-	nome: string;
+	name: string;
 
 	@IsInt()
 	@IsPositive()
 	@Min(0)
 	@Max(120)
-	idade: number;
+	age: number;
 }
+

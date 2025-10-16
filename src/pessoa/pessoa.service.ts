@@ -1,17 +1,24 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { CreatePessoaDto } from './dto/create-pessoa.dto';
 import { UpdatePessoaDto } from './dto/update-pessoa.dto';
-import { PrismaService } from '../prisma/prisma.service';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Pessoa } from './entities/pessoa.entity';
+import { Repository } from 'typeorm';
+
 
 @Injectable()
 export class PessoaService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    @InjectRepository(Pessoa)
+    private readonly pessoaRepository: Repository<Pessoa>,
+  ) {}
 
-  async create(createPessoaDto: CreatePessoaDto) {
+
+  async create(createPessoaDto: CreatePessoaDto): Promise<Pessoa> {
     try {
-      return await this.prisma.pessoa.create({
-        data: createPessoaDto,
-      });
+      const novaPessoa = this.pessoaRepository.create(createPessoaDto);
+        
+      return this.pessoaRepository.save(novaPessoa);
     } catch (err: any) {
       throw new InternalServerErrorException('Erro ao criar pessoa', {
         description: err?.message,
@@ -19,23 +26,20 @@ export class PessoaService {
     }
   }
 
-  findAll() {
-    return this.prisma.pessoa.findMany();
+  async findAll(): Promise<Pessoa[]> {
+    return this.pessoaRepository.find();
   }
 
-  findOne(id: number) {
-    return this.prisma.pessoa.findUnique({ where: { id } });
+  async findOne(id: number) {
+    return this.pessoaRepository.findOneBy({id});
   }
 
-  update(id: number, updatePessoaDto: UpdatePessoaDto) {
-    return this.prisma.pessoa.update({
-      where: { id },
-      data: updatePessoaDto,
-    });
+  async update(id: number, updatePessoaDto: UpdatePessoaDto) {
+    return this.pessoaRepository.update(id,updatePessoaDto);
   }
 
-  remove(id: number) {
-    return this.prisma.pessoa.delete({ where: { id } });
+  async remove(id: number) {
+    return this.pessoaRepository.delete(id);
   }
 }
 

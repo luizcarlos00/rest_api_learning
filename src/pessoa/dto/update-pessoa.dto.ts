@@ -5,12 +5,12 @@ import { IsInt, IsOptional, IsPositive, IsString, Max, Min } from 'class-validat
 export class UpdatePessoaDto extends PartialType(CreatePessoaDto) {
 	@IsOptional()
 	@IsString()
-	nome?: string;
+	name?: string;
 
 	@IsOptional()
 	@IsInt()
 	@IsPositive()
 	@Min(0)
 	@Max(120)
-	idade?: number;
+	age?: number;
 }
